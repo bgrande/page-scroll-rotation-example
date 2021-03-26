@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple CSS and JavaScript based image rotation on page scroll</title>
+    <style>
+        .container {
+            width: 100vw;
+            height: 200vh;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .image-container {
+            width: 765px;
+            height: auto;
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img src="rotated-image.png" alt="the image to be rotated on scroll" width="765" height="1080" />
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        const minTransform = 0;
+        const maxTransform = 90;
+        const scrollThreshold = 5;
+
+        let transform = minTransform;
+
+        function rotate(transform) {
+            const image = document.querySelector('.image-container');
+
+            let transformString = 'rotate(' + transform + 'deg)';
+
+            if (image.style.transform !== transformString) {
+                image.style.transform = transformString;
+            }
+        }
+
+        function trackScrollPosition(e) {
+            e.preventDefault();
+
+            const step = e.target.scrollingElement.scrollTop;
+            const y = window.scrollY;
+
+            if (step <= scrollThreshold) {
+                rotate(0);
+                return;
+            }
+
+            transform = (step - scrollThreshold);
+
+            if (transform >= maxTransform) {
+                transform = maxTransform;
+            } else if (transform <= scrollThreshold) {
+                transform = 0;
+            }
+
+            rotate(transform);
+        }
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            document.addEventListener('scroll', trackScrollPosition, false);
+        });
+    </script>
+</body>
+</html>
